@@ -3,3 +3,9 @@ numpy
 scikit-learn
 fastapi
 uvicorn
+python-dotenv
+SQLAlchemy
+seaborn
+matplotlib
+psycopg2
+pickle5

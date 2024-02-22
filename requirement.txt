@@ -1,5 +1,6 @@
 pandas
 numpy
+virtualenv
 scikit-learn
 fastapi
 uvicorn
@@ -8,4 +9,7 @@ SQLAlchemy
 seaborn
 matplotlib
 psycopg2
-pickle5
+pickle4
+plotly
+flask
+flask_sqlalchemy

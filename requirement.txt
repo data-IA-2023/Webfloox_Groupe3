@@ -1,4 +1,5 @@
 pandas
+Pyarrow
 numpy
 virtualenv
 scikit-learn

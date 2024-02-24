@@ -1,7 +1,7 @@
 import pandas as pd
-from sqlalchemy import create_engine
-from dotenv import load_dotenv
-import os
+
+
+
 import matplotlib.pyplot as plt
 import seaborn as sns ;
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
@@ -58,11 +58,8 @@ class Recommendation:
         return ' '.join([type + '_' + name for name in x.split()])
 
     def getindex(self, filmm):
-        index_list = self.df[self.df['primaryTitle'] == filmm].index
-        if len(index_list) > 0:
-            return index_list[0]
-        else:
-            return None
+        index_list = self.df.loc[self.df['primaryTitle'] == filmm].index
+        return index_list[0] if not index_list.empty else None
 
     def index_list(self, similarity_measure, Nbfilm):
         sorted_indexes = sorted(enumerate(similarity_measure), key=lambda x: x[1], reverse=True)
@@ -70,7 +67,7 @@ class Recommendation:
         return top_indexes
 
     def clean(self, df):
-        columns_to_clean = ['primaryTitle', 'titleType', 'genres', 'directors', 'writers', 
+        columns_to_clean = ['titleType', 'genres', 'directors', 'writers', 
                             'actor', 'producer', 'cinematographer', 'composer', 'editor', 
                             'production_designer', 'self', 'archive_footage', 'archive_sound']
 
@@ -106,7 +103,7 @@ class Recommendation:
     def recommender(self, film='', Nbfilm=5, method='knn'):
         indexfilm = self.getindex(film)
         if indexfilm is None:
-            return []
+            return None
 
         if method == 'cosine':
             similarity_measure = cosine_similarity(self.count_vect, self.count_vect[indexfilm])
@@ -122,27 +119,4 @@ class Recommendation:
         return [self.findfilm(idx) for idx in indexes]
 
 
-def data_load():
-    load_dotenv('BDD_URL.env')
-    BDD_URL = os.environ['BDD_URL']
-    engine = create_engine(BDD_URL)
-
-
-    SQL= """
-    SELECT  "tconst", "primaryTitle", "titleType", "isAdult", "startYear", "runtimeMinutes", "genres", "averageRating", "directors", "writers", "actor", "producer", "cinematographer", "composer", "editor", "production_designer", "self", "archive_footage", "archive_sound"
-    from "castview"
-    where "titleType" = 'movie' and "runtimeMinutes" Is NOT null and "averageRating" is NOT NULL and "genres" is NOT NULL and "startYear" is NOT NULL and "isAdult" is NOT NULL  and "directors" is NOT NULL and  "writers" is NOT NULL  and  "actor" is NOT NULL  and  "producer" is NOT NULL
-    ORDER BY "tconst" desc
-    limit 100;
-    """
-    df = pd.read_sql(SQL, engine)
-    engine.dispose()
-    return df
-
-df = data_load()
-
-for film in df['primaryTitle']:
-    
-    r = Recommendation(df, film=film, Nbfilm=5, method='knn')
-    print(f"{film} >---> {r.resultat}")
 

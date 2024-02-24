@@ -92,3 +92,21 @@ content_based_recs = hybrid_recommender.content_based_recommendation(user_id)
 print("Recommandations basées sur le filtrage collaboratif basé sur les utilisateurs:", collab_user_recs)
 print("Recommandations basées sur le filtrage collaboratif basé sur les éléments:", collab_item_recs)
 print("Recommandations basées sur le contenu:", content_based_recs)
+
+# Fusion des recommandations
+all_recs = collab_user_recs + collab_item_recs + content_based_recs
+
+# Élimination des duplicatas tout en maintenant l'ordre de l'apparition des films
+unique_recs = []
+[unique_recs.append(x) for x in all_recs if x not in unique_recs]
+
+# Vous pouvez également ajouter un classement basé sur la fréquence d'apparition des films dans les recommandations
+from collections import Counter
+rec_counter = Counter(all_recs)
+sorted_recs = sorted(unique_recs, key=lambda x: rec_counter[x], reverse=True)
+
+# Sélection des top N recommandations finales
+top_n = 5
+final_recommendations = sorted_recs[:top_n]
+
+print("Recommandations finales:", final_recommendations)

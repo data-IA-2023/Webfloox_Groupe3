@@ -4,9 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <style>
+        /* Resetting default margin and padding */
+        body, h1, p {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #141414;
+            color: #fff;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        a {
+            color: #e50914;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Styling the signup and login links */
+        .signup, .login {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #e50914;
+            color: #fff;
+            border-radius: 5px;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* Styling the hover effect for signup and login links */
+        .signup:hover, .login:hover {
+            background-color: #ff0a16;
+        }
+    </style>
 </head>
 <body>
+    <img src="logo.png">
     <h1>Welcome to Movie Recommendation System</h1>
-    <p>Please <a href="/signup">Sign Up</a> or <a href="/login">Log In</a> to get personalized movie recommendations.</p>
+    <p>Please <a class="signup" href="/signup">Sign Up</a> or <a class="login" href="/login">Log In</a> to get personalized movie recommendations.</p>
 </body>
 </html>

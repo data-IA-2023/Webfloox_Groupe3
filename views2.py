@@ -48,7 +48,7 @@ def login():
         # Retrieve user data from database (replace with your database logic)
         # ...
 
-        if user and bcrypt.checkpw(password.encode('utf-8'), user['password']):
+        if username in users and bcrypt.checkpw(password.encode('utf-8'), users[username]['password']):
             session['username'] = username
             return redirect('/profile')
         else:

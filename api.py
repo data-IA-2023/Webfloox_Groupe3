@@ -14,7 +14,9 @@ imdb_data = pd.read_csv('imdb_data.csv')
 
 class HybridRecommender:
     def __init__(self, ratings_data, imdb_data):
+        ratings_data['movieId'] = ratings_data['movieId'].astype(str)
         self.ratings_data = ratings_data
+        imdb_data=imdb_data.dropna()
         self.imdb_data = imdb_data
         
     def collaborative_filtering_user(self, user_id, top_n=5):

@@ -14,3 +14,4 @@ pickle4
 plotly
 flask
 flask_sqlalchemy
+requests

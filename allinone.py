@@ -43,21 +43,22 @@ class HybridRecommender:
         return similar_items[:top_n]
     
     def content_based_recommendation(self, user_id, top_n=5):
-        # Recommandation basée sur le contenu (exemple avec similarité cosinus)
+        # Recommendation based on content (example with cosine similarity)
         user_ratings = self.ratings_data[self.ratings_data['userId'] == user_id]
-        user_preferences = user_ratings.merge(self.imdb_data, on='movieId', how='inner')
+        user_preferences = pd.concat([user_ratings, self.imdb_data], axis=1)  # or 0
         
-        # Calcul de la similarité entre les films basée sur les caractéristiques (exemple: genres, acteurs, réalisateurs)
-        similarity_matrix = cosine_similarity(user_preferences.drop(columns=['userId', 'movieId']))
+        # Calculating similarity between movies based on features (e.g., year)
+        similarity_matrix = cosine_similarity(user_preferences['year'].values.reshape(-1, 1))
         
-        # Recommandation des films similaires aux films préférés de l'utilisateur
+        # Recommendation of movies similar to user's preferred movies
         recommended_movies = []
-        for movie_id in user_preferences['movieId'].tolist():
-            movie_index = user_preferences[user_preferences['movieId'] == movie_id].index[0]
-            similar_movies = self.find_similar_movies(similarity_matrix, movie_index)
+        for idx in user_preferences.index:
+            movie_id = user_preferences.loc[idx, 'movieId']
+            similar_movies = self.find_similar_movies(similarity_matrix, idx)
             recommended_movies.extend(similar_movies)
         
         return recommended_movies[:top_n]
+
     
     def find_similar_users(self, user_id, k=5):
         # Exemple: trouver des utilisateurs similaires basés sur les évaluations

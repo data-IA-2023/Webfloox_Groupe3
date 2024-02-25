@@ -1,4 +1,4 @@
 movieId,title,genre,director,actors,year
-1,Inception,Action,Christopher Nolan,Leonardo DiCaprio,Joseph Gordon-Levitt,Ellen Page,2010
-2,The Shawshank Redemption,Drama,Frank Darabont,Tim Robbins,Morgan Freeman,1994
-3,Forrest Gump,Drama,Robert Zemeckis,Tom Hanks,Robin Wright,Gary Sinise,1994
+1,Inception,Action,Christopher Nolan,Leonardo DiCaprio,2010
+2,The Shawshank Redemption,Drama,Frank Darabont,Tim Robbins,1994
+3,Forrest Gump,Drama,Robert Zemeckis,Tom Hanks,1994

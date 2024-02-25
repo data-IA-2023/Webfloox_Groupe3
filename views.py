@@ -3,21 +3,9 @@ import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.neighbors import NearestNeighbors
 from collections import Counter
-
-
-app = Flask(__name__)
-
-# Import the model
 from models import HybridRecommender
 
-# Chargement des données utilisateur-film
-ratings_data = pd.read_csv('ratings.csv')
-
-# Chargement des données IMDb (exemple de caractéristiques des films)
-imdb_data = pd.read_csv('imdb_data.csv')
-
-# Create an instance of the recommender
-hybrid_recommender = HybridRecommender(ratings_data, imdb_data)
+app = Flask(__name__)
 
 @app.route('/')
 def index():
@@ -62,6 +50,18 @@ def profile():
 
     # Renvoyer les recommandations à la page de profil
     return render_template('profile.html', recommendations=final_recommendations)
+
+
+
+
+# Chargement des données utilisateur-film
+ratings_data = pd.read_csv('ratings.csv')
+
+# Chargement des données IMDb (exemple de caractéristiques des films)
+imdb_data = pd.read_csv('imdb_data.csv')
+
+# Create an instance of the recommender
+hybrid_recommender = HybridRecommender(ratings_data, imdb_data)
 
 if __name__ == '__main__':
     app.run(debug=True)

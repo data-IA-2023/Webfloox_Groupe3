@@ -40,8 +40,10 @@ class HybridRecommender:
         user_ratings = self.ratings_data[self.ratings_data['userId'] == user_id]
         user_preferences = pd.concat([user_ratings, self.imdb_data], axis=1)  # or 0
         
+        user_preferences.dropna()
+        
         # Calculating similarity between movies based on features (e.g., year)
-        similarity_matrix = cosine_similarity(user_preferences['year'].values.reshape(-1, 1))
+        similarity_matrix = cosine_similarity(user_preferences['startYear'].values.reshape(-1, 1))
         
         # Recommendation of movies similar to user's preferred movies
         recommended_movies = []

@@ -1,10 +1,10 @@
-from flask import Flask, redirect, request, jsonify, render_template
+from flask import Flask, redirect, request, jsonify, render_template, session
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.neighbors import NearestNeighbors
 from collections import Counter
 from models import HybridRecommender
-from users import db,User 
+from users import db, User 
 from sqlalchemy.exc import IntegrityError
 from dotenv import load_dotenv
 import os
@@ -12,18 +12,14 @@ import os
 load_dotenv('BDD_URL.env')
 BDD_URL = os.environ['BDD_URL']
 
-
-
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = BDD_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = '123'  # Clé secrète pour la gestion de session
 db.init_app(app)
 
 @app.route('/')
 def index():
-    
-    
     return render_template('index.html')
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -53,6 +49,7 @@ def login():
         user = User.query.filter_by(username=username, password=password).first()
         if user:
             # Connecte l'utilisateur (vous pouvez ajouter la gestion de session ici)
+            session['user_id'] = user.id
             return redirect('/profile')
         else:
             return "Nom d'utilisateur ou mot de passe incorrect."
@@ -61,8 +58,12 @@ def login():
 
 @app.route('/profile')
 def profile():
-    # Récupérer l'ID utilisateur à partir de la session ou des données de connexion
-    user_id = 1  # Exemple : utilisateur connecté avec l'ID 1
+    # Vérifie si l'utilisateur est connecté
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    # Récupérer l'ID utilisateur à partir de la session
+    user_id = session['user_id']
 
     # Obtenir les recommandations pour l'utilisateur connecté
     collab_user_recs = hybrid_recommender.collaborative_filtering_user(user_id)
@@ -80,9 +81,6 @@ def profile():
 
     # Renvoyer les recommandations à la page de profil
     return render_template('profile.html', recommendations=final_recommendations)
-
-
-
 
 # Chargement des données utilisateur-film
 ratings_data = pd.read_csv('ratings.csv')

@@ -63,6 +63,7 @@ def profile():
     if 'user_id' not in session:
         return redirect('/login')
 
+
     # Récupérer l'ID utilisateur à partir de la session
     user_id = session['user_id']
 

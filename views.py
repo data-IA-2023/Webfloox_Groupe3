@@ -4,29 +4,59 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.neighbors import NearestNeighbors
 from collections import Counter
 from models import HybridRecommender
+from users import db,User 
+from sqlalchemy.exc import IntegrityError
+from dotenv import load_dotenv
+import os
+
+load_dotenv('BDD_URL.env')
+BDD_URL = os.environ['BDD_URL']
+
+
+
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = BDD_URL
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
 
 @app.route('/')
 def index():
+    
+    
     return render_template('index.html')
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        # Traiter les données d'inscription ici
-        # ... (ex: enregistrer l'utilisateur dans la base de données)
-        # Rediriger vers la page de connexion après l'inscription réussie
-        return redirect('/login')
+        username = request.form['username']
+        password = request.form['password']
+        
+        # Crée un nouvel utilisateur
+        new_user = User(username=username, password=password)
+        db.session.add(new_user)
+        try:
+            db.session.commit()
+            return redirect('/login')
+        except IntegrityError:
+            db.session.rollback()
+            return "Ce nom d'utilisateur existe déjà. Veuillez choisir un autre nom d'utilisateur."
     return render_template('signup.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        # Traiter les données de connexion ici
-        # ... (ex: vérifier les informations d'identification de l'utilisateur)
-        # Rediriger vers la page de profil après la connexion réussie
-        return redirect('/profile')
+        username = request.form['username']
+        password = request.form['password']
+        
+        # Vérifie les informations d'identification
+        user = User.query.filter_by(username=username, password=password).first()
+        if user:
+            # Connecte l'utilisateur (vous pouvez ajouter la gestion de session ici)
+            return redirect('/profile')
+        else:
+            return "Nom d'utilisateur ou mot de passe incorrect."
+
     return render_template('login.html')
 
 @app.route('/profile')

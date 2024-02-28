@@ -3,16 +3,17 @@ import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.neighbors import NearestNeighbors
 from collections import Counter
-
+from sklearn.feature_extraction.text import CountVectorizer
 
 class HybridRecommender:
+    
     def __init__(self, ratings_data, imdb_data):
         ratings_data['movieId'] = ratings_data['movieId'].astype(str)
         self.ratings_data = ratings_data
-        imdb_data=imdb_data.dropna()
+        
         self.imdb_data = imdb_data
         
-    def collaborative_filtering_user(self, user_id, top_n=5):
+    def collaborative_filtering_user(self, user_id, top_n=18):
         # Filtrage collaboratif basé sur les utilisateurs
         user_ratings = self.ratings_data[self.ratings_data['userId'] == user_id]
         similar_users = self.find_similar_users(user_id)
@@ -25,7 +26,7 @@ class HybridRecommender:
         
         return recommended_movies[:top_n]
     
-    def collaborative_filtering_item(self, user_id, top_n=5):
+    def collaborative_filtering_item(self, user_id, top_n=18):
         # Filtrage collaboratif basé sur les éléments
         user_ratings = self.ratings_data[self.ratings_data['userId'] == user_id]
         
@@ -35,24 +36,15 @@ class HybridRecommender:
         
         return similar_items[:top_n]
     
-    def content_based_recommendation(self, user_id, top_n=5):
-        # Recommendation based on content (example with cosine similarity)
-        user_ratings = self.ratings_data[self.ratings_data['userId'] == user_id]
-        user_preferences = pd.concat([user_ratings, self.imdb_data], axis=1)  # or 0
+    def content_based_recommendation(self, indexfilm=1, Nbfilm=19):
         
-        user_preferences.dropna()
-        
-        # Calculating similarity between movies based on features (e.g., year)
-        similarity_matrix = cosine_similarity(user_preferences['startYear'].values.reshape(-1, 1))
-        
-        # Recommendation of movies similar to user's preferred movies
-        recommended_movies = []
-        for idx in user_preferences.index:
-            movie_id = user_preferences.loc[idx, 'movieId']
-            similar_movies = self.find_similar_movies(similarity_matrix, idx)
-            recommended_movies.extend(similar_movies)
-        
-        return recommended_movies[:top_n]
+        cv = CountVectorizer(analyzer="word")
+        count_vect = cv.fit_transform(self.imdb_data['feature'])
+        similarity_measure = cosine_similarity(count_vect, count_vect[indexfilm])
+        indexes = self.index_list(similarity_measure, Nbfilm)
+        indexes = indexes[1:]
+        return self.imdb_data.iloc[indexes]['tconst'].tolist()
+
 
     
     def find_similar_users(self, user_id, k=5):
@@ -81,3 +73,27 @@ class HybridRecommender:
         similar_movies_indices = similarity_matrix[movie_index].argsort()[::-1]
         similar_movies = self.ratings_data.iloc[similar_movies_indices]['movieId'].tolist()
         return similar_movies
+    
+    def findfilm(self, index):
+        if index < len(self.imdb_data):
+            return self.imdb_data.iloc[index][['tconst', 'primaryTitle']].tolist()
+        else:
+            return None
+        
+    def index_list(self, similarity_measure, Nbfilm):
+        sorted_indexes = sorted(enumerate(similarity_measure), key=lambda x: x[1], reverse=True)
+        top_indexes = [index for index, _ in sorted_indexes[:Nbfilm]]
+        return top_indexes
+    
+    def getindex(self,filmm):
+        index_list = self.imdb_data[self.imdb_data['primaryTitle'] == filmm].index
+        if len(index_list) > 0:
+            return index_list[0]
+        else:
+            return None
+    def getid(self,tconst):
+        index_list = self.imdb_data[self.imdb_data['tconst'] == tconst].index
+        if len(index_list) > 0:
+            return index_list[0]
+        else:
+            return None

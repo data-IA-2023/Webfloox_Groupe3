@@ -22,6 +22,7 @@
         h1 {
             font-size: 36px;
             margin-bottom: 20px;
+            text-align: center;
         }
 
         form {
@@ -58,9 +59,17 @@
         button:hover {
             background-color: #ff0a16;
         }
+        .logo {
+            width: 250px; /* Adjust as needed */
+            height: auto;
+            display: block; /* Make the logo behave as a block element */
+            margin: 0 auto; /* Center the logo horizontally */
+            margin-bottom: 20px; /* Add margin at the bottom */
+        }
     </style>
 </head>
 <body>
+    <img class="logo" src="/static/image/Logo.png" alt="Logo"></img>
     <h1>Login</h1>
     <form action="/login" method="post">
         <label for="username">Username:</label>

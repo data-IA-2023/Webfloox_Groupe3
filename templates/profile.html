@@ -21,11 +21,13 @@
         h1 {
             font-size: 36px;
             margin-bottom: 20px;
+            text-align: center; /* Align the heading text to center */
         }
 
         h2 {
             font-size: 24px;
             margin-bottom: 10px;
+            text-align: center;
         }
 
         ul {
@@ -37,16 +39,47 @@
             font-size: 18px;
             margin-bottom: 10px;
         }
+
+        /* Container for scrollable images */
+        .image-container {
+            width: 100%;
+            overflow-x: auto; /* Enable horizontal scroll */
+            text-align: center; /* Center the images */
+        }
+
+        /* Style for individual movie images */
+        .movie-image {
+            width: 150px; /* Adjust as needed */
+            height: auto;
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        /* Style for the logo */
+        .logo {
+            width: 250px; /* Adjust as needed */
+            height: auto;
+            display: block; /* Make the logo behave as a block element */
+            margin: 0 auto; /* Center the logo horizontally */
+            margin-bottom: 20px; /* Add margin at the bottom */
+        }
     </style>
 </head>
 <body>
-    <h1>Welcome to Your Profile</h1>
+    <img class="logo" src="/static/image/Logo.png" alt="Logo"></img>
+    <h1>Welcome to Your Profile {{username}}</h1>
     <h2>Your Movie Recommendations:</h2>
-    <ul>
-        {% for movie in recommendations %}
-            <li>{{ movie }}</li>
-        {% endfor %}
-    </ul>
+    
+    <!-- Container for scrollable images -->
+        {% if film !=None %}
+        <img class="movie-image" src="{{ film }}" alt="No image">
+        {% endif %}
+        <div class="image-container">
+            {% for movie_info in recommendations %}
+            <a href="/profile?movie={{ movie_info['id'] }}">
+                <img class="movie-image" src="{{ movie_info['link'] }}" alt="No image">
+            </a>
+            {% endfor %}
+        </div>
 </body>
 </html>
-

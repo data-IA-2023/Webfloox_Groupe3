@@ -23,6 +23,12 @@
         h1 {
             font-size: 36px;
             margin-bottom: 20px;
+            text-align: center;
+        }
+        h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-align: center;
         }
 
         form {
@@ -59,10 +65,18 @@
         button:hover {
             background-color: #ff0a16;
         }
+        .logo {
+            width: 250px; /* Adjust as needed */
+            height: auto;
+            display: block; /* Make the logo behave as a block element */
+            margin: 0 auto; /* Center the logo horizontally */
+            margin-bottom: 20px; /* Add margin at the bottom */
+        }
     </style>
 
 </head>
 <body>
+    <img class="logo" src="/static/image/Logo.png" alt="Logo"></img>
     <h1>Sign Up</h1>
     <form action="/signup" method="post">
         <label for="username">Username:</label>
@@ -70,6 +84,11 @@
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required><br><br>
         <button type="submit">Sign Up</button>
+
     </form>
+    {% if error != None %}
+    <h1>🙊😮😮😮😮🙊</h1>
+    <h1>{{ error }}</h1>
+    {% endif %}
 </body>
 </html>

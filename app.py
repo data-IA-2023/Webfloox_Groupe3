@@ -11,7 +11,7 @@ from sqlalchemy.exc import IntegrityError
 from dotenv import load_dotenv
 import os
 from sqlalchemy import create_engine
-from tmdb import get_movie_poster_url, get_movie_synopsis
+from tmdb import get_movie_poster_url
     
 load_dotenv('BDD_URL.env')
 BDD_URL = os.environ['BDD_URL']
@@ -116,6 +116,7 @@ def profile():
     
     content_based_recs=[]
     movieid=1
+    print('la premier valeur de film : ', request.args.get('movie'))
     if request.args.get('movie') != None: 
         movieid = int(request.args.get('movie'))
         print('movie = ' , movieid)
@@ -147,9 +148,10 @@ def profile():
         film_picture=film_info['image']
         film_synop = film_info['synop']
         film_Title = slectedFilm[1]
+        video = film_info['video']
         
     # Renvoyer les informations sur les recommandations à la page de profil
-    return render_template('profile.html', recommendations=recommendations_info, username=user.username, film=film_picture, Synopsis=film_synop, Title=film_Title )
+    return render_template('profile.html', recommendations=recommendations_info, username=user.username, film=film_picture, Synopsis=film_synop, Title=film_Title, video = video)
 
 
 

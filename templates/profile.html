@@ -63,7 +63,24 @@
             margin: 0 auto; /* Center the logo horizontally */
             margin-bottom: 20px; /* Add margin at the bottom */
         }
+        .movie-info {
+            display: flex;
+            align-items: left;
+            margin-bottom: 20px;
+        }
+        
+        .movie-image-container {
+            flex: 0 0 auto;
+            margin-right: 20px;
+        }
+        
+        .synopsis-container {
+            flex: 1 1 auto;
+            align-items: left;
+
+        }
     </style>
+    
 </head>
 <body>
     <img class="logo" src="/static/image/Logo.png" alt="Logo"></img>
@@ -71,9 +88,26 @@
     <h2>Your Movie Recommendations:</h2>
     
     <!-- Container for scrollable images -->
-        {% if film !=None %}
-        <img class="movie-image" src="{{ film }}" alt="No image">
+    <div class="image-container">
+        {% if film != '' %}
+        <div class="movie-info">
+            <div class="movie-image-container">
+                <img class="movie-image" src="{{ film }}" alt="No image">
+            </div>
+            <div class="synopsis-container">
+                {% if Title %}
+                    <h3>{{ Title }}</h3>
+                {% endif %}
+                {% if Synopsis %}
+                    <p>{{ Synopsis }}</p>
+                {% else %}
+                    <p>No synopsis available.</p>
+                {% endif %}
+            </div>
+        </div>
         {% endif %}
+    </div>
+    </div>
         <div class="image-container">
             {% for movie_info in recommendations %}
             <a href="/profile?movie={{ movie_info['id'] }}">

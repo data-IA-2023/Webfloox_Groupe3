@@ -11,7 +11,7 @@ from sqlalchemy.exc import IntegrityError
 from dotenv import load_dotenv
 import os
 from sqlalchemy import create_engine
-from tmdb import get_movie_poster_url
+from tmdb import get_movie_poster_url, get_movie_synopsis
     
 load_dotenv('BDD_URL.env')
 BDD_URL = os.environ['BDD_URL']
@@ -31,7 +31,7 @@ def loaddata():
     SELECT  "tconst", "primaryTitle", "titleType", "isAdult", "startYear", "runtimeMinutes", "genres", "averageRating", "directors", "writers", "actor", "producer", "cinematographer", "composer", "editor", "production_designer", "self", "archive_footage", "archive_sound"
     from "castview"
     where "titleType" = 'movie' and "runtimeMinutes" < 360 and "runtimeMinutes" Is NOT null and "averageRating" is NOT NULL and "genres" is NOT NULL and "startYear" is NOT NULL and "isAdult" is NOT NULL  and "directors" is NOT NULL and  "writers" is NOT NULL  and  "actor" is NOT NULL  and  "producer" is NOT NULL
-    ORDER BY "averageRating"  desc
+    ORDER BY "startYear" DESC, "averageRating" DESC
     limit 1000;
     """
     #, "startYear"
@@ -101,7 +101,7 @@ def login():
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     # Vérifie si l'utilisateur est connecté
-    if 'user_id' not in session or session['user_id'] is None:
+    if ('user_id' not in session ) or (session['user_id'] is None):
         return redirect('/login')
 
     # Récupérer l'ID utilisateur à partir de la session
@@ -109,39 +109,47 @@ def profile():
     user = User.query.get(user_id)
 
     # Obtenir les recommandations pour l'utilisateur connecté
-    collab_user_recs =[]
-    collab_item_recs =[]
-    # collab_user_recs = hybrid_recommender.collaborative_filtering_user(user_id)
-    # collab_item_recs = hybrid_recommender.collaborative_filtering_item(user_id)
+    # collab_user_recs =[]
+    # collab_item_recs =[]
+    collab_user_recs = hybrid_recommender.collaborative_filtering_user(user_id)
+    collab_item_recs = hybrid_recommender.collaborative_filtering_item(user_id)
     
     content_based_recs=[]
     movieid=1
     if request.args.get('movie') != None: 
         movieid = int(request.args.get('movie'))
-    print('movie = ' , movieid)
-    content_based_recs = hybrid_recommender.content_based_recommendation(movieid)
+        print('movie = ' , movieid)
+        content_based_recs = hybrid_recommender.content_based_recommendation(movieid)
 
     # Fusionner et classer les recommandations
-    all_recs = collab_user_recs + collab_item_recs + content_based_recs
+    all_recs = content_based_recs + collab_user_recs + collab_item_recs
     unique_recs = []
     [unique_recs.append(x) for x in all_recs if x not in unique_recs]
     rec_counter = Counter(all_recs)
     sorted_recs = sorted(unique_recs, key=lambda x: rec_counter[x], reverse=True)
     top_n = 18
-    final_recommendations = sorted_recs[:top_n]
+    final_recommendations = sorted_recs[1:top_n+1]
 
     # Créer une liste de dictionnaires contenant les informations sur les recommandations
     recommendations_info = []
     for movie_id in final_recommendations:
-        movie_link = get_movie_poster_url(movie_id)
-        if movie_link is None:
-            movie_link = "/static/image/nopicture.jpg"
-        recommendations_info.append({"id": hybrid_recommender.getid(movie_id), "link": movie_link})
+        film_info = get_movie_poster_url(movie_id)
+        
+        recommendations_info.append({"id": hybrid_recommender.getid(movie_id), "link": film_info['image']})
     
-    film_selected= get_movie_poster_url(hybrid_recommender.findfilm(movieid)[0])
-    
+    film_picture=''
+    film_synop=''
+    film_Title=''
+    if request.args.get('movie') != None: 
+        movieid = int(request.args.get('movie'))
+        slectedFilm=hybrid_recommender.findfilm(movieid)
+        film_info= get_movie_poster_url(slectedFilm[0])
+        film_picture=film_info['image']
+        film_synop = film_info['synop']
+        film_Title = slectedFilm[1]
+        
     # Renvoyer les informations sur les recommandations à la page de profil
-    return render_template('profile.html', recommendations=recommendations_info, username=user.username, film=film_selected)
+    return render_template('profile.html', recommendations=recommendations_info, username=user.username, film=film_picture, Synopsis=film_synop, Title=film_Title )
 
 
 

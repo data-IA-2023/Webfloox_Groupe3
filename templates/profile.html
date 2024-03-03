@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        /* Resetting default margin and padding */
+        body, h1, h2, ul, li {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #141414;
+            color: #fff;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-align: center; /* Align the heading text to center */
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+
+        li {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        /* Container for scrollable images */
+        .image-container {
+            width: 100%;
+            overflow-x: auto; /* Enable horizontal scroll */
+            text-align: center; /* Center the images */
+        }
+
+        /* Style for individual movie images */
+        .movie-image {
+            width: 150px; /* Adjust as needed */
+            height: auto;
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        /* Style for the logo */
+        .logo {
+            width: 250px; /* Adjust as needed */
+            height: auto;
+            display: block; /* Make the logo behave as a block element */
+            margin: 0 auto; /* Center the logo horizontally */
+            margin-bottom: 20px; /* Add margin at the bottom */
+        }
+        .movie-info {
+            display: flex;
+            align-items: left;
+            margin-bottom: 20px;
+        }
+        
+        .movie-image-container {
+            flex: 0 0 auto;
+            margin-right: 20px;
+        }
+        
+        .synopsis-container {
+            flex: 1 1 auto;
+            align-items: left;
+
+        }
+        .rating-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .star {
+            font-size: 24px;
+            color: #ccc;
+            cursor: pointer;
+        }
+
+        .star.checked {
+            color: #ffcc00;
+        }
+        .video-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+
+        .video-player {
+            width: 560px; /* Largeur de la vidéo */
+            height: 315px; /* Hauteur de la vidéo */
+        }
+    </style>
+    
+</head>
+<body>
+    <img class="logo" src="/static/image/Logo.png" alt="Logo"></img>
+    <h1>Welcome to Your Profile {{username}}</h1>
+    <h2>Your Movie Recommendations:</h2>
+    <div class="video-container">
+        {% if video %}
+            <iframe class="video-player" src="{{ video }}" frameborder="0" allowfullscreen></iframe>
+        {% endif %}
+    </div>
+    <!-- Container for scrollable images -->
+    <div class="image-container">
+        {% if film != '' %}
+        <div class="movie-info">
+
+            <div class="movie-image-container">
+                <img class="movie-image" src="{{ film }}" alt="No image">
+            </div>
+            <div class="synopsis-container">
+                {% if Title %}
+                    <h3>{{ Title }}</h3>
+                {% endif %}
+                {% if Synopsis %}
+                    <p>{{ Synopsis }}</p>
+                {% else %}
+                <p>No synopsis available.</p>
+                {% endif %}
+                <div class="rating-container">
+                    <p>Rate this movie:</p>
+                    <span class="star" data-value="1">&#9733;</span>
+                    <span class="star" data-value="2">&#9733;</span>
+                    <span class="star" data-value="3">&#9733;</span>
+                    <span class="star" data-value="4">&#9733;</span>
+                    <span class="star" data-value="5">&#9733;</span>
+                </div>
+
+        {% endif %}
+            </div>
+        </div>
+
+    </div>
+    </div>
+        <div class="image-container">
+            {% for movie_info in recommendations %}
+            <a href="/profile?movie={{ movie_info['id'] }}">
+                <img class="movie-image" src="{{ movie_info['link'] }}" alt="No image">
+            </a>
+            {% endfor %}
+        </div>
+</body>
+</html>

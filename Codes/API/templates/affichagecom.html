@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .button {
+            padding: 10px 20px;
+            background-color: #e50914;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #141414;
+            color: #fff;
+            padding: 30px;
+            text-align: center; /* Pour centrer le contenu */
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        .movie {
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+        }
+        .name {
+            color: white;
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+        .img {
+            width: 250px;
+            height: 350px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Nos recommandations pour vous!</h1>
+   
+    {%for x in recom.resultat%}
+
+    <div class="movie">     
+        <div class="name">{{x[1]}}</div>
+       
+     
+            <img class="img" src={{dico2[x[0]]}} alt="Image" >
+        
+            <form action="/affichagecom" method="post">
+               
+                <label for="Rating">Notation:</label>
+                <input type="Rating" id="Rating" name="Rating"><br><br>
+                <input class="button"  type="submit" value="Voter">
+            </form>
+    </div>
+     </div>
+        
+            
+    {% endfor %}
+</body>
+</html>
+

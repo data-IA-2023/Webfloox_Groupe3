@@ -1,0 +1,66 @@
+<! DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+     <style>
+         .button {
+             padding: 10px 20px;
+             background-color: #e50914;
+             color: #fff;
+             border: none;
+             border-radius: 5px;
+             font-size: 18px;
+             cursor: pointer;
+             text-decoration: none;
+             display: inline-block;
+         }
+         body {
+             font-family: Arial, sans-serif;
+             background-color: #141414;
+             color: #fff;
+             padding: 30px;
+             text-align: center; /* Pour centrer le contenu */
+         }
+         h1 {
+             font-size: 36px;
+             margin-bottom: 20px;
+         }
+         .movie {
+             display: inline-block;
+             margin: 10px;
+             text-align: center;
+         }
+         .name {
+             color: white;
+             font-size: 36px;
+             margin-bottom: 20px;
+         }
+         .img {
+             width: 250px;
+             height: 350px;
+         }
+     </style>
+
+    
+</head>
+<body>
+    <h1>Recommandation</h1>
+     <form action="/recommandation" method="post">
+        
+         <label for="Film">Film vu :</label><br><br>
+         <input type="text" id="Film" name="Film" value="Takkar"><br><br>
+         
+         
+         <label for="nbfilms">Combien de films voulez-vous voir ?</label><br><br>
+         <input type="number" id="nbfilms" name="nbfilms" value="6"><br><br>
+         
+         <input class="button" type="submit" value="Envoyer film">
+     </form>
+
+       
+
+</body>    
+   
+         
+     
+    
+</html> 

@@ -15,3 +15,4 @@ Gestion utilisateurs
 Extension des info (API IMDB avec budget, revenu généré, etc)
     résumé de films sur wikipedia 
     https://developer.imdb.com/documentation/api-documentation/sample-queries/box-office/
+Pour lancer l'application, exécuter le fichier app.py avec flask. Gracias 

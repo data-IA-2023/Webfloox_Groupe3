@@ -1,0 +1,39 @@
+<html>
+
+    <h1>template</h1>
+    <div>mes taches : {{taches}}</div>
+    
+    
+    <h5>values dans mes taches:</h5>
+    
+    {%for a in taches%}
+    
+    <div><b>{{a.id}}</b>: {{a.titre}}</div>
+    
+    {%endfor%}
+    
+    
+    
+    
+    <form action="/page" method="post">
+        <label for="id">ID :</label>
+        <input type="int" id="id" name="id"><br><br>
+        
+        <label for="titre">Titre :</label>
+        <input type="text" id="titre" name="titre"><br><br>
+        
+        <input type="submit" value="Submit">
+    </form>
+    
+    
+    <form action="/page2" method="get">
+        <label for="id">ID :</label>
+        <input type="int" id="id" name="id"><br><br>
+        
+        <input type="submit" value="Submit">
+    </form>
+    <div>ma tache : {{tache}}</div>
+    
+   
+
+</html>
